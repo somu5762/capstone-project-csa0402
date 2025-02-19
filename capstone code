@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_FILES 100
+#define MAX_FILENAME 50
+
+typedef struct {
+    char name[MAX_FILENAME];
+    int size;
+} File;
+
+typedef struct {
+    File files[MAX_FILES];
+    int fileCount;
+} FileSystem;
+
+void initializeFileSystem(FileSystem *fs) {
+    fs->fileCount = 0;
+}
+
+int createFile(FileSystem *fs, const char *name, int size) {
+    if (fs->fileCount >= MAX_FILES) {
+        return -1; // File system full
+    }
+    strncpy(fs->files[fs->fileCount].name, name, MAX_FILENAME);
+    fs->files[fs->fileCount].size = size;
+    fs->fileCount++;
+    return 0; // Success
+}
+
+void listFiles(const FileSystem *fs) {
+    for (int i = 0; i < fs->fileCount; i++) {
+        printf("File: %s, Size: %d bytes\n", fs->files[i].name, fs->files[i].size);
+    }
+}
+
+int main() {
+    FileSystem fs;
+    initializeFileSystem(&fs);
+
+    createFile(&fs, "file1.txt", 150);
+    createFile(&fs, "file2.txt", 200);
+    createFile(&fs, "file3.txt", 300);
+
+    printf("Files in the file system:\n");
+    listFiles(&fs);
+
+    return 0;
+}
